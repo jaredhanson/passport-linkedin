@@ -60,6 +60,12 @@ vows.describe('LinkedInStrategy').addBatch({
         assert.equal(profile.name.familyName, 'Hanson');
         assert.equal(profile.name.givenName, 'Jared');
       },
+      'should set raw property' : function(err, profile) {
+        assert.isString(profile._raw);
+      },
+      'should set json property' : function(err, profile) {
+        assert.isObject(profile._json);
+      },
     },
   },
   
