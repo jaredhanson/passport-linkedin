@@ -20,6 +20,25 @@ vows.describe('LinkedInStrategy').addBatch({
     },
   },
   
+  'strategy request token params': {
+    topic: function() {
+      return new LinkedInStrategy({
+        consumerKey: 'ABC123',
+        consumerSecret: 'secret'
+      },
+      function() {});
+    },
+    
+    'should return scope': function (strategy) {
+      var params = strategy.requestTokenParams({ scope: 'r_fullprofile' });
+      assert.equal(params.scope, 'r_fullprofile');
+    },
+    'should return concatenated scope from array': function (strategy) {
+      var params = strategy.requestTokenParams({ scope: ['r_basicprofile', 'r_emailaddress'] });
+      assert.equal(params.scope, 'r_basicprofile+r_emailaddress');
+    },
+  },
+  
   'strategy when loading user profile': {
     topic: function() {
       var strategy = new LinkedInStrategy({
