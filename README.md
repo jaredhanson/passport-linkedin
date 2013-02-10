@@ -52,6 +52,31 @@ application:
         res.redirect('/');
       });
 
+#### Extended Permissions
+
+If you need extended permissions from the user, the permissions can be requested
+via the `scope` option to `passport.authenticate()`.
+
+For example, this authorization requests permission to the user's basic profile
+and email address:
+
+    app.get('/auth/linkedin',
+      passport.authenticate('linkedin', { scope: ['r_basicprofile', 'r_emailaddress'] }));
+
+#### Profile Fields
+
+The LinkedIn profile is very rich, and may contain a lot of information.  The
+strategy can be configured with a `profileFields` parameter which specifies a
+list of fields your application needs.  For example, to fetch the user's ID, name,
+email address, and headline, configure strategy like this.
+
+    passport.use(new LinkedInStrategy({
+        // clientID, clientSecret and callbackURL
+        profileFields: ['id', 'first-name', 'last-name', 'email-address', 'headline']
+      },
+      // verify callback
+    ));
+
 ## Examples
 
 For a complete, working example, refer to the [login example](https://github.com/jaredhanson/passport-linkedin/tree/master/examples/login).
