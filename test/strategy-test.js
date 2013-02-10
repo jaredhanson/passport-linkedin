@@ -49,9 +49,12 @@ vows.describe('LinkedInStrategy').addBatch({
       
       // mock
       strategy._oauth.get = function(url, token, tokenSecret, callback) {
-        var body = '{ "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
-        
-        callback(null, body, undefined);
+        if (url == 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name)?format=json') {
+          var body = '{ "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+          callback(null, body, undefined);
+        } else {
+          callback(new Error('Incorrect user profile URL'));
+        }
       }
       
       return strategy;
@@ -93,15 +96,73 @@ vows.describe('LinkedInStrategy').addBatch({
     topic: function() {
       var strategy = new LinkedInStrategy({
         consumerKey: 'ABC123',
-        consumerSecret: 'secret'
+        consumerSecret: 'secret',
+        profileFields: ['id', 'name', 'emails']
       },
       function() {});
       
       // mock
       strategy._oauth.get = function(url, token, tokenSecret, callback) {
-        var body = '{ "emailAddress": "jaredhanson@example.com", "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+        if (url == 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address)?format=json') {
+          var body = '{ "emailAddress": "jaredhanson@example.com", "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+          callback(null, body, undefined);
+        } else {
+          callback(new Error('Incorrect user profile URL'));
+        }
+      }
+      
+      return strategy;
+    },
+    
+    'when told to load user profile': {
+      topic: function(strategy) {
+        var self = this;
+        function done(err, profile) {
+          self.callback(err, profile);
+        }
         
-        callback(null, body, undefined);
+        process.nextTick(function () {
+          strategy.userProfile('token', 'token-secret', {}, done);
+        });
+      },
+      
+      'should not error' : function(err, req) {
+        assert.isNull(err);
+      },
+      'should load profile' : function(err, profile) {
+        assert.equal(profile.provider, 'linkedin');
+        assert.equal(profile.id, '_XX0XXX00X');
+        assert.equal(profile.displayName, 'Jared Hanson');
+        assert.equal(profile.name.familyName, 'Hanson');
+        assert.equal(profile.name.givenName, 'Jared');
+        assert.equal(profile.emails[0].value, 'jaredhanson@example.com');
+      },
+      'should set raw property' : function(err, profile) {
+        assert.isString(profile._raw);
+      },
+      'should set json property' : function(err, profile) {
+        assert.isObject(profile._json);
+      },
+    },
+  },
+  
+  'strategy when loading user profile with unmapped LinkedIn profile fields': {
+    topic: function() {
+      var strategy = new LinkedInStrategy({
+        consumerKey: 'ABC123',
+        consumerSecret: 'secret',
+        profileFields: ['id', 'first-name', 'last-name', 'headline', 'industry']
+      },
+      function() {});
+      
+      // mock
+      strategy._oauth.get = function(url, token, tokenSecret, callback) {
+        if (url == 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,industry)?format=json') {
+          var body = '{ "emailAddress": "jaredhanson@example.com", "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+          callback(null, body, undefined);
+        } else {
+          callback(new Error('Incorrect user profile URL: ' + url));
+        }
       }
       
       return strategy;
