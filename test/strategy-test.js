@@ -78,6 +78,57 @@ vows.describe('LinkedInStrategy').addBatch({
         assert.equal(profile.displayName, 'Jared Hanson');
         assert.equal(profile.name.familyName, 'Hanson');
         assert.equal(profile.name.givenName, 'Jared');
+        assert.isUndefined(profile.emails);
+      },
+      'should set raw property' : function(err, profile) {
+        assert.isString(profile._raw);
+      },
+      'should set json property' : function(err, profile) {
+        assert.isObject(profile._json);
+      },
+    },
+  },
+  
+  'strategy when loading user profile with email address': {
+    topic: function() {
+      var strategy = new LinkedInStrategy({
+        consumerKey: 'ABC123',
+        consumerSecret: 'secret'
+      },
+      function() {});
+      
+      // mock
+      strategy._oauth.get = function(url, token, tokenSecret, callback) {
+        var body = '{ "emailAddress": "jaredhanson@example.com", "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+        
+        callback(null, body, undefined);
+      }
+      
+      return strategy;
+    },
+    
+    'when told to load user profile': {
+      topic: function(strategy) {
+        var self = this;
+        function done(err, profile) {
+          self.callback(err, profile);
+        }
+        
+        process.nextTick(function () {
+          strategy.userProfile('token', 'token-secret', {}, done);
+        });
+      },
+      
+      'should not error' : function(err, req) {
+        assert.isNull(err);
+      },
+      'should load profile' : function(err, profile) {
+        assert.equal(profile.provider, 'linkedin');
+        assert.equal(profile.id, '_XX0XXX00X');
+        assert.equal(profile.displayName, 'Jared Hanson');
+        assert.equal(profile.name.familyName, 'Hanson');
+        assert.equal(profile.name.givenName, 'Jared');
+        assert.equal(profile.emails[0].value, 'jaredhanson@example.com');
       },
       'should set raw property' : function(err, profile) {
         assert.isString(profile._raw);
