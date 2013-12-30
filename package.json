@@ -21,11 +21,11 @@
   } ],
   "main": "./lib/passport-linkedin",
   "dependencies": {
-    "pkginfo": "0.2.x",
-    "passport-oauth": "0.1.x"
+    "pkginfo": "0.3.x",
+    "passport-oauth": "1.0.x"
   },
   "devDependencies": {
-    "vows": "0.6.x"
+    "vows": "0.7.x"
   },
   "scripts": {
     "test": "NODE_PATH=lib node_modules/.bin/vows test/*-test.js"
