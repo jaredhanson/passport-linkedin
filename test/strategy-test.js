@@ -49,8 +49,8 @@ vows.describe('LinkedInStrategy').addBatch({
       
       // mock
       strategy._oauth.get = function(url, token, tokenSecret, callback) {
-        if (url == 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name)?format=json') {
-          var body = '{ "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson" }';
+        if (url == 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,picture-url,public-profile-url)?format=json') {
+          var body = '{ "firstName": "Jared", "id": "_XX0XXX00X", "lastName": "Hanson", "pictureUrl": "http://m.c.lnkd.licdn.com/mpr/mprx/XXXX", "publicProfileUrl": "http://www.linkedin.com/pub/XXXX" }';
           callback(null, body, undefined);
         } else {
           callback(new Error('Incorrect user profile URL'));
@@ -82,6 +82,10 @@ vows.describe('LinkedInStrategy').addBatch({
         assert.equal(profile.name.familyName, 'Hanson');
         assert.equal(profile.name.givenName, 'Jared');
         assert.isUndefined(profile.emails);
+        assert.equal(profile.profileUrl, 'http://www.linkedin.com/pub/XXXX');
+        assert.equal(profile.photos.length, 1);
+        assert.equal(profile.photos[0].value, 'http://m.c.lnkd.licdn.com/mpr/mprx/XXXX');
+        assert.equal(profile.photos[0].type, 'thumb');
       },
       'should set raw property' : function(err, profile) {
         assert.isString(profile._raw);
@@ -97,7 +101,7 @@ vows.describe('LinkedInStrategy').addBatch({
       var strategy = new LinkedInStrategy({
         consumerKey: 'ABC123',
         consumerSecret: 'secret',
-        profileFields: ['id', 'name', 'emails']
+        profileFields: ['emails']
       },
       function() {});
       
