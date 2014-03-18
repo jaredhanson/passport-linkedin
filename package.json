@@ -22,7 +22,7 @@
   "main": "./lib/passport-linkedin",
   "dependencies": {
     "pkginfo": "0.2.x",
-    "passport-oauth": "0.1.x"
+    "passport-oauth1": "~1.0.1"
   },
   "devDependencies": {
     "vows": "0.6.x"
