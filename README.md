@@ -90,6 +90,8 @@ email address, and headline, configure strategy like this.
 > // verify callback
 > ));
 > ```
+> 
+> The URL of the avatar image wil be available as `pictureUrl` in the callback from passport.
 >
 
 
