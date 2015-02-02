@@ -1,5 +1,5 @@
 {
- "name": "node-authentication",
+ "name": "passport-linkedin-examples-login",
   "main": "app.js",
   "dependencies" : {
     "express" : "~4.0.0", 			
