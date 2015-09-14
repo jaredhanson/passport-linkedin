@@ -7,9 +7,6 @@ var linkedin = require('..');
 vows.describe('passport-linkedin').addBatch({
   
   'module': {
-    'should report a version': function (x) {
-      assert.isString(linkedin.version);
-    },
   },
   
 }).export(module);
