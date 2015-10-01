@@ -77,6 +77,24 @@ email address, and headline, configure strategy like this.
       // verify callback
     ));
 
+
+> **Note on profile images:**
+>
+> To get `https://` avatar images for LinkedIn, you'll need to add the field `picture-url;secure=true`.  For example:
+>
+> ```js
+> passport.use(new LinkedInStrategy({
+>   // clientID, clientSecret and callbackURL
+>   profileFields: ['id', 'first-name', 'last-name', 'email-address', 'headline', 'picture-url; secure=true']
+> },
+> // verify callback
+> ));
+> ```
+> 
+> The URL of the avatar image wil be available as `pictureUrl` in the callback from passport.
+>
+
+
 ## Examples
 
 For a complete, working example, refer to the [login example](https://github.com/jaredhanson/passport-linkedin/tree/master/examples/login).
