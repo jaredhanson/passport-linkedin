@@ -15,6 +15,11 @@ unobtrusively integrated into any application or framework that supports
 
 ---
 
+[![npm](https://img.shields.io/npm/v/passport-linkedin.svg)](https://www.npmjs.com/package/passport-linkedin)
+[![build](https://img.shields.io/travis/jaredhanson/passport-linkedin.svg)](https://travis-ci.org/jaredhanson/passport-linkedin)
+[![coverage](https://img.shields.io/coveralls/jaredhanson/passport-linkedin.svg)](https://coveralls.io/github/jaredhanson/passport-linkedin)
+[...](https://github.com/jaredhanson/passport-linkedin/wiki/Status)
+
 ## Install
 
     $ npm install passport-linkedin
@@ -91,8 +96,6 @@ For a complete, working example, refer to the [login example](https://github.com
 
     $ npm install --dev
     $ make test
-
-[![Build Status](https://secure.travis-ci.org/jaredhanson/passport-linkedin.png)](http://travis-ci.org/jaredhanson/passport-linkedin)
 
 ## Credits
 
