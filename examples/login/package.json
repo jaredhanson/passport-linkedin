@@ -5,6 +5,11 @@
     "express": ">= 0.0.0",
     "ejs": ">= 0.0.0",
     "passport": ">= 0.0.0",
-    "passport-linkedin": ">= 0.0.0"
+    "passport-linkedin": ">= 0.0.0",
+    "body-parser" : "latest",
+    "express-logger" : "latest",
+    "express-session" : "latest",
+    "cookie-parser" : "latest",
+    "method-override" : "latest"
   }
 }
