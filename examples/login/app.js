@@ -2,7 +2,12 @@ var express = require('express')
   , http = require('http')
   , passport = require('passport')
   , util = require('util')
-  , LinkedInStrategy = require('passport-linkedin').Strategy;
+  , LinkedInStrategy = require('passport-linkedin').Strategy
+  , bodyParser = require('body-parser')
+  , expressLogger = require('express-logger')
+  , session = require('express-session')
+  , cookieParser = require('cookie-parser')
+  , methodOverride = require('method-override');
 
 var app = express();
 
@@ -10,17 +15,14 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.session({ secret: 'keyboard cat' }));
+app.use(cookieParser());
+app.use(bodyParser());
+app.use(methodOverride());
+app.use(session({ secret: 'keyboard cat' }));
 // Initialize Passport!  Also use passport.session() middleware, to support
 // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
-app.use(express.static(__dirname + '/public'));
 
 var LINKEDIN_API_KEY = "--insert-linkedin-api-key-here--";
 var LINKEDIN_SECRET_KEY = "--insert-linkedin-secret-key-here--";
@@ -101,6 +103,8 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
+
+app.use(express.static(__dirname + '/public'));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
